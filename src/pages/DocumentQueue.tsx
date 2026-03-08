@@ -26,18 +26,18 @@ export default function DocumentQueue() {
   const selectedDocument = documents.find((d) => d.id === selectedDoc);
 
   return (
-    <div className="flex h-screen">
-      <div className={`flex-1 flex flex-col overflow-hidden ${selectedDoc ? "border-r border-border" : ""}`}>
+    <div className="flex flex-col md:flex-row h-[calc(100vh-3rem)] md:h-screen">
+      <div className={`flex-1 flex flex-col overflow-hidden ${selectedDoc ? "hidden md:flex md:border-r md:border-border" : ""}`}>
         {/* Header */}
-        <div className="p-6 pb-0">
+        <div className="p-4 md:p-6 pb-0">
           <h1 className="page-header">Document Queue</h1>
           <p className="page-subheader">Primary workflow — All documents in processing</p>
         </div>
 
         {/* Filters */}
-        <div className="p-6 pb-3">
-          <div className="filter-bar">
-            <div className="relative flex-1 max-w-xs">
+        <div className="p-4 md:p-6 pb-3">
+          <div className="filter-bar flex-col sm:flex-row">
+            <div className="relative w-full sm:flex-1 sm:max-w-xs">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
               <input
                 type="text"
@@ -47,28 +47,30 @@ export default function DocumentQueue() {
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
-            <Filter className="w-3.5 h-3.5 text-muted-foreground" />
-            <select className="text-xs border border-input rounded-md px-2 py-1.5 bg-background" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-              {statusOptions.map((s) => <option key={s} value={s}>{s === "All" ? "All Statuses" : s.replace("_", " ")}</option>)}
-            </select>
-            <select className="text-xs border border-input rounded-md px-2 py-1.5 bg-background" value={clientFilter} onChange={(e) => setClientFilter(e.target.value)}>
-              {clientOptions.map((c) => <option key={c} value={c}>{c === "All" ? "All Clients" : c}</option>)}
-            </select>
-            <select className="text-xs border border-input rounded-md px-2 py-1.5 bg-background" value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)}>
-              {priorityOptions.map((p) => <option key={p} value={p}>{p === "All" ? "All Priorities" : p}</option>)}
-            </select>
-            {(statusFilter !== "All" || clientFilter !== "All" || priorityFilter !== "All" || search) && (
-              <button className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1" onClick={() => { setStatusFilter("All"); setClientFilter("All"); setPriorityFilter("All"); setSearch(""); }}>
-                <X className="w-3 h-3" /> Clear
-              </button>
-            )}
+            <div className="flex flex-wrap items-center gap-2">
+              <Filter className="w-3.5 h-3.5 text-muted-foreground hidden sm:block" />
+              <select className="text-xs border border-input rounded-md px-2 py-1.5 bg-background flex-1 sm:flex-none" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+                {statusOptions.map((s) => <option key={s} value={s}>{s === "All" ? "All Statuses" : s.replace("_", " ")}</option>)}
+              </select>
+              <select className="text-xs border border-input rounded-md px-2 py-1.5 bg-background flex-1 sm:flex-none" value={clientFilter} onChange={(e) => setClientFilter(e.target.value)}>
+                {clientOptions.map((c) => <option key={c} value={c}>{c === "All" ? "All Clients" : c}</option>)}
+              </select>
+              <select className="text-xs border border-input rounded-md px-2 py-1.5 bg-background flex-1 sm:flex-none" value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)}>
+                {priorityOptions.map((p) => <option key={p} value={p}>{p === "All" ? "All Priorities" : p}</option>)}
+              </select>
+              {(statusFilter !== "All" || clientFilter !== "All" || priorityFilter !== "All" || search) && (
+                <button className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1" onClick={() => { setStatusFilter("All"); setClientFilter("All"); setPriorityFilter("All"); setSearch(""); }}>
+                  <X className="w-3 h-3" /> Clear
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Table */}
-        <div className="flex-1 overflow-auto px-6 pb-6">
-          <div className="bg-card rounded-lg border overflow-hidden">
-            <table className="w-full text-xs">
+        <div className="flex-1 overflow-auto px-4 md:px-6 pb-4 md:pb-6">
+          <div className="bg-card rounded-lg border overflow-x-auto">
+            <table className="w-full text-xs min-w-[700px]">
               <thead>
                 <tr className="border-b bg-muted/30">
                   <th className="text-left p-3 font-medium text-muted-foreground">Worker</th>
@@ -88,14 +90,14 @@ export default function DocumentQueue() {
                     className={`table-row-interactive border-b last:border-0 ${selectedDoc === doc.id ? "bg-primary/5" : ""}`}
                     onClick={() => setSelectedDoc(doc.id)}
                   >
-                    <td className="p-3 font-medium text-foreground">{doc.worker}</td>
-                    <td className="p-3 text-muted-foreground">{doc.contract}</td>
-                    <td className="p-3 text-muted-foreground">{doc.client}</td>
-                    <td className="p-3 text-foreground">{doc.docType}</td>
+                    <td className="p-3 font-medium text-foreground whitespace-nowrap">{doc.worker}</td>
+                    <td className="p-3 text-muted-foreground whitespace-nowrap">{doc.contract}</td>
+                    <td className="p-3 text-muted-foreground whitespace-nowrap">{doc.client}</td>
+                    <td className="p-3 text-foreground whitespace-nowrap">{doc.docType}</td>
                     <td className="p-3"><StatusBadge status={doc.status} /></td>
                     <td className="p-3"><StatusBadge status={doc.priority} /></td>
-                    <td className="p-3 text-muted-foreground">{doc.expiration}</td>
-                    <td className="p-3 text-muted-foreground">{doc.lastUpdate}</td>
+                    <td className="p-3 text-muted-foreground whitespace-nowrap">{doc.expiration}</td>
+                    <td className="p-3 text-muted-foreground whitespace-nowrap">{doc.lastUpdate}</td>
                   </tr>
                 ))}
               </tbody>

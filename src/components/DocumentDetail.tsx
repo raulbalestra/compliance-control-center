@@ -1,4 +1,4 @@
-import { X, CheckCircle2, XCircle, AlertTriangle, Bot, FileText, Clock } from "lucide-react";
+import { X, CheckCircle2, XCircle, AlertTriangle, Bot, FileText, Clock, ArrowLeft } from "lucide-react";
 import { StatusBadge } from "@/components/StatusBadge";
 
 interface DocumentDetailProps {
@@ -26,14 +26,19 @@ const lifecycle = [
 
 export function DocumentDetail({ document, onClose }: DocumentDetailProps) {
   return (
-    <div className="w-[480px] h-screen overflow-y-auto bg-card border-l border-border">
+    <div className="w-full md:w-[480px] h-[calc(100vh-3rem)] md:h-screen overflow-y-auto bg-card border-l border-border">
       {/* Header */}
-      <div className="sticky top-0 bg-card z-10 p-4 border-b border-border flex items-center justify-between">
-        <div>
-          <h2 className="text-sm font-semibold text-foreground">{document.docType}</h2>
-          <p className="text-xs text-muted-foreground">{document.worker} — {document.client}</p>
+      <div className="sticky top-0 bg-card z-10 p-4 border-b border-border flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 min-w-0">
+          <button onClick={onClose} className="p-1 hover:bg-muted rounded md:hidden shrink-0">
+            <ArrowLeft className="w-4 h-4 text-muted-foreground" />
+          </button>
+          <div className="min-w-0">
+            <h2 className="text-sm font-semibold text-foreground truncate">{document.docType}</h2>
+            <p className="text-xs text-muted-foreground truncate">{document.worker} — {document.client}</p>
+          </div>
         </div>
-        <button onClick={onClose} className="p-1 hover:bg-muted rounded">
+        <button onClick={onClose} className="p-1 hover:bg-muted rounded shrink-0 hidden md:block">
           <X className="w-4 h-4 text-muted-foreground" />
         </button>
       </div>
@@ -49,7 +54,7 @@ export function DocumentDetail({ document, onClose }: DocumentDetailProps) {
         </div>
 
         {/* Status */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <StatusBadge status={document.status} />
           <StatusBadge status={document.priority} />
         </div>
@@ -70,7 +75,7 @@ export function DocumentDetail({ document, onClose }: DocumentDetailProps) {
             ].map(([label, value]) => (
               <div key={label} className="p-2 bg-muted/50 rounded text-xs">
                 <span className="text-muted-foreground">{label}</span>
-                <p className="font-medium text-foreground mt-0.5">{value}</p>
+                <p className="font-medium text-foreground mt-0.5 truncate">{value}</p>
               </div>
             ))}
           </div>

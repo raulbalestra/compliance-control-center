@@ -1,31 +1,13 @@
 import {
-  FileStack,
-  CheckCircle2,
-  Clock,
-  XCircle,
-  Send,
-  TrendingUp,
-  AlertTriangle,
-  Ban,
-  CalendarClock,
-  Bot,
-  User,
-  Zap,
+  FileStack, CheckCircle2, Clock, XCircle, Send, TrendingUp,
+  AlertTriangle, Ban, CalendarClock, Bot, User, Zap,
 } from "lucide-react";
 import { MetricCard } from "@/components/MetricCard";
 import { StatusBadge } from "@/components/StatusBadge";
 import { activityTimeline, clients } from "@/lib/mockData";
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  PieChart, Pie, Cell,
 } from "recharts";
 
 const statusData = [
@@ -58,9 +40,9 @@ const rejections = [
 
 export default function Dashboard() {
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
           <h1 className="page-header">Operations Dashboard</h1>
           <p className="page-subheader">Compliance Control Center — Real-time overview</p>
@@ -75,7 +57,7 @@ export default function Dashboard() {
       </div>
 
       {/* Metrics Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
         <MetricCard title="Documents Processed" value="1,676" change="+12% vs last month" changeType="positive" icon={FileStack} />
         <MetricCard title="Auto-Validated" value="1,245" change="74.3% automation rate" changeType="positive" icon={CheckCircle2} iconColor="bg-success/10" />
         <MetricCard title="Pending Validation" value="342" change="18 high priority" changeType="negative" icon={Clock} iconColor="bg-warning/10" />
@@ -88,31 +70,22 @@ export default function Dashboard() {
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Weekly Processing */}
-        <div className="lg:col-span-2 bg-card rounded-lg border p-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-4">
+        <div className="lg:col-span-2 bg-card rounded-lg border p-4 md:p-5">
           <h3 className="text-sm font-semibold text-foreground mb-4">Documents Processed This Week</h3>
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={weeklyData}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 13%, 89%)" />
               <XAxis dataKey="day" tick={{ fontSize: 12, fill: "hsl(220, 10%, 46%)" }} />
               <YAxis tick={{ fontSize: 12, fill: "hsl(220, 10%, 46%)" }} />
-              <Tooltip
-                contentStyle={{
-                  background: "hsl(0, 0%, 100%)",
-                  border: "1px solid hsl(220, 13%, 89%)",
-                  borderRadius: "8px",
-                  fontSize: "12px",
-                }}
-              />
+              <Tooltip contentStyle={{ background: "hsl(0, 0%, 100%)", border: "1px solid hsl(220, 13%, 89%)", borderRadius: "8px", fontSize: "12px" }} />
               <Bar dataKey="validated" fill="hsl(142, 71%, 45%)" radius={[4, 4, 0, 0]} name="Validated" />
               <Bar dataKey="rejected" fill="hsl(0, 72%, 51%)" radius={[4, 4, 0, 0]} name="Rejected" />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        {/* Status Distribution */}
-        <div className="bg-card rounded-lg border p-5">
+        <div className="bg-card rounded-lg border p-4 md:p-5">
           <h3 className="text-sm font-semibold text-foreground mb-4">Documents by Status</h3>
           <ResponsiveContainer width="100%" height={180}>
             <PieChart>
@@ -121,14 +94,7 @@ export default function Dashboard() {
                   <Cell key={index} fill={entry.color} />
                 ))}
               </Pie>
-              <Tooltip
-                contentStyle={{
-                  background: "hsl(0, 0%, 100%)",
-                  border: "1px solid hsl(220, 13%, 89%)",
-                  borderRadius: "8px",
-                  fontSize: "12px",
-                }}
-              />
+              <Tooltip contentStyle={{ background: "hsl(0, 0%, 100%)", border: "1px solid hsl(220, 13%, 89%)", borderRadius: "8px", fontSize: "12px" }} />
             </PieChart>
           </ResponsiveContainer>
           <div className="space-y-1.5 mt-2">
@@ -146,9 +112,8 @@ export default function Dashboard() {
       </div>
 
       {/* Bottom Widgets */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Activity Timeline */}
-        <div className="bg-card rounded-lg border p-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-4">
+        <div className="bg-card rounded-lg border p-4 md:p-5">
           <h3 className="text-sm font-semibold text-foreground mb-4">Recent Activity</h3>
           <div className="space-y-3">
             {activityTimeline.map((item, i) => (
@@ -169,14 +134,13 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Upcoming Deadlines */}
-        <div className="bg-card rounded-lg border p-5">
+        <div className="bg-card rounded-lg border p-4 md:p-5">
           <h3 className="text-sm font-semibold text-foreground mb-4">Upcoming Deadlines</h3>
           <div className="space-y-3">
             {deadlines.map((item, i) => (
               <div key={i} className="flex items-center justify-between py-2 border-b border-border last:border-0">
-                <div>
-                  <p className="text-xs font-medium text-foreground">{item.doc}</p>
+                <div className="min-w-0 flex-1 mr-2">
+                  <p className="text-xs font-medium text-foreground truncate">{item.doc}</p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">Due: {item.deadline}</p>
                 </div>
                 <StatusBadge status={item.risk} />
@@ -185,8 +149,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Compliance Heatmap by Client */}
-        <div className="bg-card rounded-lg border p-5">
+        <div className="bg-card rounded-lg border p-4 md:p-5">
           <h3 className="text-sm font-semibold text-foreground mb-4">Client Compliance</h3>
           <div className="space-y-3">
             {clients.map((client) => (
@@ -213,7 +176,6 @@ export default function Dashboard() {
             ))}
           </div>
 
-          {/* Rejections */}
           <h3 className="text-sm font-semibold text-foreground mt-6 mb-3">Recent Rejections</h3>
           <div className="space-y-2">
             {rejections.map((item, i) => (

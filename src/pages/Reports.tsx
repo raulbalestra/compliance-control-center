@@ -41,14 +41,14 @@ const tooltipStyle = {
 
 export default function Reports() {
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       <div>
         <h1 className="page-header">Reports</h1>
         <p className="page-subheader">Compliance analytics and performance reporting</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="bg-card rounded-lg border p-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4">
+        <div className="bg-card rounded-lg border p-4 md:p-5">
           <h3 className="text-sm font-semibold text-foreground mb-4">Documents Processed by Month</h3>
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={monthlyData}>
@@ -62,7 +62,7 @@ export default function Reports() {
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-card rounded-lg border p-5">
+        <div className="bg-card rounded-lg border p-4 md:p-5">
           <h3 className="text-sm font-semibold text-foreground mb-4">Compliance Success Rate (%)</h3>
           <ResponsiveContainer width="100%" height={280}>
             <LineChart data={complianceRate}>
@@ -75,10 +75,10 @@ export default function Reports() {
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-card rounded-lg border p-5">
+        <div className="bg-card rounded-lg border p-4 md:p-5">
           <h3 className="text-sm font-semibold text-foreground mb-4">Most Common Document Errors</h3>
-          <div className="flex items-center gap-6">
-            <ResponsiveContainer width="50%" height={200}>
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+            <ResponsiveContainer width="100%" height={200} className="sm:w-1/2">
               <PieChart>
                 <Pie data={errorTypes} cx="50%" cy="50%" outerRadius={80} dataKey="value" paddingAngle={2}>
                   {errorTypes.map((entry, i) => <Cell key={i} fill={entry.color} />)}
@@ -86,10 +86,10 @@ export default function Reports() {
                 <Tooltip contentStyle={tooltipStyle} />
               </PieChart>
             </ResponsiveContainer>
-            <div className="space-y-2">
+            <div className="space-y-2 w-full sm:w-auto">
               {errorTypes.map((e) => (
                 <div key={e.name} className="flex items-center gap-2 text-xs">
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: e.color }} />
+                  <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: e.color }} />
                   <span className="text-muted-foreground">{e.name}</span>
                   <span className="font-medium text-foreground ml-auto">{e.value}</span>
                 </div>
@@ -98,7 +98,7 @@ export default function Reports() {
           </div>
         </div>
 
-        <div className="bg-card rounded-lg border p-5">
+        <div className="bg-card rounded-lg border p-4 md:p-5">
           <h3 className="text-sm font-semibold text-foreground mb-4">Documents Submitted per Client</h3>
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={clientSubmissions} layout="vertical">
@@ -112,9 +112,9 @@ export default function Reports() {
         </div>
       </div>
 
-      <div className="bg-card rounded-lg border p-5">
+      <div className="bg-card rounded-lg border p-4 md:p-5">
         <h3 className="text-sm font-semibold text-foreground mb-3">Key Performance Indicators</h3>
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
           {[
             { label: "Avg Validation Time", value: "2.3 min" },
             { label: "Agent Automation Rate", value: "74.3%" },
