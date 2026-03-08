@@ -498,4 +498,9 @@ export const translations = {
   },
 } as const;
 
-export type Translations = typeof translations["en"];
+// Deep writable string type
+type DeepStringify<T> = {
+  [K in keyof T]: T[K] extends object ? DeepStringify<T[K]> : string;
+};
+
+export type Translations = DeepStringify<typeof translations["en"]>;
