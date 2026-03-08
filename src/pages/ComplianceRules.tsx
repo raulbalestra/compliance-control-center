@@ -1,4 +1,5 @@
 import { ShieldCheck, Plus } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const rules = [
   { id: 1, client: "Petrobras", contract: "All", docType: "Medical Certificate (ASO)", required: true, expiration: "12 months", frequency: "Annual", validation: "Signature + Date + Name match", deadline: "30 days before expiry", priority: "High" },
@@ -10,32 +11,33 @@ const rules = [
 ];
 
 export default function ComplianceRules() {
+  const { t } = useLanguage();
+
   return (
     <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
-          <h1 className="page-header">Compliance Rules</h1>
-          <p className="page-subheader">Rule engine configuration — Define validation and submission requirements</p>
+          <h1 className="page-header">{t.rules.title}</h1>
+          <p className="page-subheader">{t.rules.subtitle}</p>
         </div>
         <button className="flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors w-full sm:w-auto">
-          <Plus className="w-3.5 h-3.5" /> New Rule
+          <Plus className="w-3.5 h-3.5" /> {t.rules.newRule}
         </button>
       </div>
 
-      {/* Desktop table */}
       <div className="hidden md:block bg-card rounded-lg border overflow-x-auto">
         <table className="w-full text-xs min-w-[900px]">
           <thead>
             <tr className="border-b bg-muted/30">
-              <th className="text-left p-3 font-medium text-muted-foreground">Client</th>
-              <th className="text-left p-3 font-medium text-muted-foreground">Contract</th>
-              <th className="text-left p-3 font-medium text-muted-foreground">Document Type</th>
-              <th className="text-left p-3 font-medium text-muted-foreground">Required</th>
-              <th className="text-left p-3 font-medium text-muted-foreground">Expiration</th>
-              <th className="text-left p-3 font-medium text-muted-foreground">Frequency</th>
-              <th className="text-left p-3 font-medium text-muted-foreground">Validation Rules</th>
-              <th className="text-left p-3 font-medium text-muted-foreground">Deadline</th>
-              <th className="text-left p-3 font-medium text-muted-foreground">Priority</th>
+              <th className="text-left p-3 font-medium text-muted-foreground">{t.rules.client}</th>
+              <th className="text-left p-3 font-medium text-muted-foreground">{t.rules.contract}</th>
+              <th className="text-left p-3 font-medium text-muted-foreground">{t.rules.documentType}</th>
+              <th className="text-left p-3 font-medium text-muted-foreground">{t.rules.required}</th>
+              <th className="text-left p-3 font-medium text-muted-foreground">{t.rules.expiration}</th>
+              <th className="text-left p-3 font-medium text-muted-foreground">{t.rules.frequency}</th>
+              <th className="text-left p-3 font-medium text-muted-foreground">{t.rules.validationRules}</th>
+              <th className="text-left p-3 font-medium text-muted-foreground">{t.rules.deadline}</th>
+              <th className="text-left p-3 font-medium text-muted-foreground">{t.rules.priority}</th>
             </tr>
           </thead>
           <tbody>
@@ -50,7 +52,7 @@ export default function ComplianceRules() {
                 </td>
                 <td className="p-3">
                   <span className={`text-xs font-medium ${rule.required ? "text-foreground" : "text-muted-foreground"}`}>
-                    {rule.required ? "Mandatory" : "Optional"}
+                    {rule.required ? t.rules.mandatory : t.rules.optional}
                   </span>
                 </td>
                 <td className="p-3 text-muted-foreground">{rule.expiration}</td>
@@ -69,7 +71,6 @@ export default function ComplianceRules() {
         </table>
       </div>
 
-      {/* Mobile cards */}
       <div className="md:hidden space-y-3">
         {rules.map((rule) => (
           <div key={rule.id} className="bg-card rounded-lg border p-4 space-y-2">
@@ -84,10 +85,10 @@ export default function ComplianceRules() {
               }`}>{rule.priority}</span>
             </div>
             <div className="text-xs text-muted-foreground space-y-1">
-              <p><span className="font-medium text-foreground">Client:</span> {rule.client} · {rule.contract}</p>
-              <p><span className="font-medium text-foreground">Expiration:</span> {rule.expiration} · {rule.frequency}</p>
-              <p><span className="font-medium text-foreground">Validation:</span> {rule.validation}</p>
-              <p><span className="font-medium text-foreground">Deadline:</span> {rule.deadline}</p>
+              <p><span className="font-medium text-foreground">{t.rules.client}:</span> {rule.client} · {rule.contract}</p>
+              <p><span className="font-medium text-foreground">{t.rules.expiration}:</span> {rule.expiration} · {rule.frequency}</p>
+              <p><span className="font-medium text-foreground">{t.rules.validationRules}:</span> {rule.validation}</p>
+              <p><span className="font-medium text-foreground">{t.rules.deadline}:</span> {rule.deadline}</p>
             </div>
           </div>
         ))}
