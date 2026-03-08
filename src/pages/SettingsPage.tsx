@@ -1,61 +1,64 @@
 import { Shield, Bell, HardDrive, Users, Lock } from "lucide-react";
-
-const sections = [
-  {
-    icon: Users,
-    title: "User Roles & Permissions",
-    description: "Manage user access levels and role assignments",
-    items: [
-      { label: "Admin", desc: "Full system access, rule management, overrides" },
-      { label: "Compliance Analyst", desc: "Document review, exception handling, approvals" },
-      { label: "Viewer", desc: "Read-only access to dashboards and reports" },
-      { label: "Auditor", desc: "Access to audit logs and compliance reports" },
-    ],
-  },
-  {
-    icon: Bell,
-    title: "Notification Preferences",
-    description: "Configure alerts and notification channels",
-    items: [
-      { label: "Critical exceptions", desc: "Email + SMS", enabled: true },
-      { label: "Document rejections", desc: "Email", enabled: true },
-      { label: "Deadline reminders", desc: "Email (7 days before)", enabled: true },
-      { label: "Daily summary report", desc: "Email at 08:00", enabled: false },
-    ],
-  },
-  {
-    icon: HardDrive,
-    title: "Document Storage",
-    description: "Storage configuration and retention policies",
-    items: [
-      { label: "Storage provider", desc: "Enterprise Cloud Storage" },
-      { label: "Retention period", desc: "7 years (regulatory compliance)" },
-      { label: "Max file size", desc: "25 MB" },
-      { label: "Accepted formats", desc: "PDF, JPG, PNG, TIFF" },
-    ],
-  },
-  {
-    icon: Lock,
-    title: "Security Policies",
-    description: "Enterprise security and compliance settings",
-    items: [
-      { label: "Two-factor authentication", desc: "Required for all users", enabled: true },
-      { label: "Session timeout", desc: "30 minutes of inactivity" },
-      { label: "IP allowlist", desc: "Enabled — 3 ranges configured", enabled: true },
-      { label: "Audit log retention", desc: "Indefinite" },
-    ],
-  },
-];
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function SettingsPage() {
+  const { t } = useLanguage();
+
+  const sections = [
+    {
+      icon: Users,
+      title: t.settings.userRoles,
+      description: t.settings.userRolesDesc,
+      items: [
+        { label: t.settings.admin, desc: t.settings.adminDesc },
+        { label: t.settings.analyst, desc: t.settings.analystDesc },
+        { label: t.settings.viewer, desc: t.settings.viewerDesc },
+        { label: t.settings.auditor, desc: t.settings.auditorDesc },
+      ],
+    },
+    {
+      icon: Bell,
+      title: t.settings.notifications,
+      description: t.settings.notificationsDesc,
+      items: [
+        { label: t.settings.criticalExceptions, desc: t.settings.criticalExceptionsDesc, enabled: true },
+        { label: t.settings.docRejections, desc: t.settings.docRejectionsDesc, enabled: true },
+        { label: t.settings.deadlineReminders, desc: t.settings.deadlineRemindersDesc, enabled: true },
+        { label: t.settings.dailySummary, desc: t.settings.dailySummaryDesc, enabled: false },
+      ],
+    },
+    {
+      icon: HardDrive,
+      title: t.settings.storage,
+      description: t.settings.storageDesc,
+      items: [
+        { label: t.settings.storageProvider, desc: t.settings.storageProviderDesc },
+        { label: t.settings.retentionPeriod, desc: t.settings.retentionPeriodDesc },
+        { label: t.settings.maxFileSize, desc: t.settings.maxFileSizeDesc },
+        { label: t.settings.acceptedFormats, desc: t.settings.acceptedFormatsDesc },
+      ],
+    },
+    {
+      icon: Lock,
+      title: t.settings.security,
+      description: t.settings.securityDesc,
+      items: [
+        { label: t.settings.twoFactor, desc: t.settings.twoFactorDesc, enabled: true },
+        { label: t.settings.sessionTimeout, desc: t.settings.sessionTimeoutDesc },
+        { label: t.settings.ipAllowlist, desc: t.settings.ipAllowlistDesc, enabled: true },
+        { label: t.settings.auditRetention, desc: t.settings.auditRetentionDesc },
+      ],
+    },
+  ];
+
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       <div>
-        <h1 className="page-header">Settings</h1>
-        <p className="page-subheader">System configuration, security, and administration</p>
+        <h1 className="page-header">{t.settings.title}</h1>
+        <p className="page-subheader">{t.settings.subtitle}</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4">
         {sections.map((section) => (
           <div key={section.title} className="bg-card rounded-lg border p-5">
             <div className="flex items-center gap-3 mb-4">

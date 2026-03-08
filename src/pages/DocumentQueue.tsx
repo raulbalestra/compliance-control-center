@@ -3,12 +3,14 @@ import { documents } from "@/lib/mockData";
 import { StatusBadge } from "@/components/StatusBadge";
 import { DocumentDetail } from "@/components/DocumentDetail";
 import { Search, Filter, X } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const statusOptions = ["All", "waiting", "received", "validating", "validation_failed", "ready", "submitted", "rejected"];
 const clientOptions = ["All", "Petrobras", "Shell Brasil", "TotalEnergies", "Equinor"];
 const priorityOptions = ["All", "critical", "high", "medium", "low"];
 
 export default function DocumentQueue() {
+  const { t } = useLanguage();
   const [selectedDoc, setSelectedDoc] = useState<number | null>(null);
   const [statusFilter, setStatusFilter] = useState("All");
   const [clientFilter, setClientFilter] = useState("All");
@@ -28,68 +30,57 @@ export default function DocumentQueue() {
   return (
     <div className="flex flex-col md:flex-row h-[calc(100vh-3rem)] md:h-screen">
       <div className={`flex-1 flex flex-col overflow-hidden ${selectedDoc ? "hidden md:flex md:border-r md:border-border" : ""}`}>
-        {/* Header */}
         <div className="p-4 md:p-6 pb-0">
-          <h1 className="page-header">Document Queue</h1>
-          <p className="page-subheader">Primary workflow — All documents in processing</p>
+          <h1 className="page-header">{t.docQueue.title}</h1>
+          <p className="page-subheader">{t.docQueue.subtitle}</p>
         </div>
 
-        {/* Filters */}
         <div className="p-4 md:p-6 pb-3">
           <div className="filter-bar flex-col sm:flex-row">
             <div className="relative w-full sm:flex-1 sm:max-w-xs">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Search worker or document..."
+              <input type="text" placeholder={t.docQueue.searchPlaceholder}
                 className="w-full pl-8 pr-3 py-1.5 text-xs bg-background border border-input rounded-md focus:outline-none focus:ring-1 focus:ring-ring"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
+                value={search} onChange={(e) => setSearch(e.target.value)} />
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <Filter className="w-3.5 h-3.5 text-muted-foreground hidden sm:block" />
               <select className="text-xs border border-input rounded-md px-2 py-1.5 bg-background flex-1 sm:flex-none" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-                {statusOptions.map((s) => <option key={s} value={s}>{s === "All" ? "All Statuses" : s.replace("_", " ")}</option>)}
+                {statusOptions.map((s) => <option key={s} value={s}>{s === "All" ? t.docQueue.allStatuses : s.replace("_", " ")}</option>)}
               </select>
               <select className="text-xs border border-input rounded-md px-2 py-1.5 bg-background flex-1 sm:flex-none" value={clientFilter} onChange={(e) => setClientFilter(e.target.value)}>
-                {clientOptions.map((c) => <option key={c} value={c}>{c === "All" ? "All Clients" : c}</option>)}
+                {clientOptions.map((c) => <option key={c} value={c}>{c === "All" ? t.docQueue.allClients : c}</option>)}
               </select>
               <select className="text-xs border border-input rounded-md px-2 py-1.5 bg-background flex-1 sm:flex-none" value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)}>
-                {priorityOptions.map((p) => <option key={p} value={p}>{p === "All" ? "All Priorities" : p}</option>)}
+                {priorityOptions.map((p) => <option key={p} value={p}>{p === "All" ? t.docQueue.allPriorities : p}</option>)}
               </select>
               {(statusFilter !== "All" || clientFilter !== "All" || priorityFilter !== "All" || search) && (
                 <button className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1" onClick={() => { setStatusFilter("All"); setClientFilter("All"); setPriorityFilter("All"); setSearch(""); }}>
-                  <X className="w-3 h-3" /> Clear
+                  <X className="w-3 h-3" /> {t.docQueue.clear}
                 </button>
               )}
             </div>
           </div>
         </div>
 
-        {/* Table */}
         <div className="flex-1 overflow-auto px-4 md:px-6 pb-4 md:pb-6">
           <div className="bg-card rounded-lg border overflow-x-auto">
             <table className="w-full text-xs min-w-[700px]">
               <thead>
                 <tr className="border-b bg-muted/30">
-                  <th className="text-left p-3 font-medium text-muted-foreground">Worker</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground">Contract</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground">Client</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground">Document Type</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground">Status</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground">Priority</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground">Expiration</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground">Updated</th>
+                  <th className="text-left p-3 font-medium text-muted-foreground">{t.docQueue.worker}</th>
+                  <th className="text-left p-3 font-medium text-muted-foreground">{t.docQueue.contract}</th>
+                  <th className="text-left p-3 font-medium text-muted-foreground">{t.docQueue.client}</th>
+                  <th className="text-left p-3 font-medium text-muted-foreground">{t.docQueue.documentType}</th>
+                  <th className="text-left p-3 font-medium text-muted-foreground">{t.docQueue.status}</th>
+                  <th className="text-left p-3 font-medium text-muted-foreground">{t.docQueue.priority}</th>
+                  <th className="text-left p-3 font-medium text-muted-foreground">{t.docQueue.expiration}</th>
+                  <th className="text-left p-3 font-medium text-muted-foreground">{t.docQueue.updated}</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((doc) => (
-                  <tr
-                    key={doc.id}
-                    className={`table-row-interactive border-b last:border-0 ${selectedDoc === doc.id ? "bg-primary/5" : ""}`}
-                    onClick={() => setSelectedDoc(doc.id)}
-                  >
+                  <tr key={doc.id} className={`table-row-interactive border-b last:border-0 ${selectedDoc === doc.id ? "bg-primary/5" : ""}`} onClick={() => setSelectedDoc(doc.id)}>
                     <td className="p-3 font-medium text-foreground whitespace-nowrap">{doc.worker}</td>
                     <td className="p-3 text-muted-foreground whitespace-nowrap">{doc.contract}</td>
                     <td className="p-3 text-muted-foreground whitespace-nowrap">{doc.client}</td>
@@ -103,13 +94,12 @@ export default function DocumentQueue() {
               </tbody>
             </table>
             {filtered.length === 0 && (
-              <div className="p-12 text-center text-sm text-muted-foreground">No documents match the current filters.</div>
+              <div className="p-12 text-center text-sm text-muted-foreground">{t.docQueue.noResults}</div>
             )}
           </div>
         </div>
       </div>
 
-      {/* Detail Panel */}
       {selectedDocument && (
         <DocumentDetail document={selectedDocument} onClose={() => setSelectedDoc(null)} />
       )}
