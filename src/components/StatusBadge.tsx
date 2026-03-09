@@ -41,9 +41,9 @@ interface StatusBadgeProps {
 
 export function StatusBadge({ status, label }: StatusBadgeProps) {
   const { t } = useLanguage();
-  const config = statusConfig[status];
-  const Icon = config.icon;
-  const translatedLabel = t.status[status as keyof typeof t.status];
+  const config = statusConfig[status] || { className: "status-badge bg-muted text-muted-foreground" };
+  const Icon = config?.icon;
+  const translatedLabel = t.status?.[status as keyof typeof t.status] || status;
 
   return (
     <span className={config.className}>
