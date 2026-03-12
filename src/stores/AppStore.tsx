@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
-import type { Document, PendingItem, Exception, AuditLog, Client, Contract, Site, Worker, Provider, DocTypeConfig, ComplianceRule, Integration, Automation, Process, Comment, TimelineEntry, AppUser } from "@/types";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
+import type { Document, PendingItem, Exception, AuditLog, Client, Contract, Site, Worker, Provider, DocTypeConfig, ComplianceRule, Integration, Automation, Process, Comment, TimelineEntry, AppUser, DocStatus, ValidationResult, Priority } from "@/types";
 import { initialDocuments, initialExceptions, initialPendingItems, initialClients, initialContracts, initialSites, initialWorkers, initialProviders, initialDocTypes, initialRules, initialAuditLogs, initialIntegrations, initialAutomations, initialProcesses, initialUsers } from "@/lib/mockData";
 
 interface AppState {
@@ -98,6 +98,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [rules, setRules] = useState<ComplianceRule[]>(initialRules);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>(initialAuditLogs);
   const [integrations] = useState<Integration[]>(initialIntegrations);
+
   const [automations] = useState<Automation[]>(initialAutomations);
   const [processes] = useState<Process[]>(initialProcesses);
   const [users, setUsers] = useState<AppUser[]>(initialUsers);
@@ -106,7 +107,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setAuditLogs(prev => [{ ...log, id: nextAuditId++ }, ...prev]);
   }, []);
 
-  // Document actions
   const approveDocument = useCallback((id: number, note?: string) => {
     setDocuments(prev => prev.map(d => d.id === id ? {
       ...d, status: "approved" as const, validation: "pass" as const, lastUpdate: "Just now",
@@ -148,7 +148,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       timeline: [...d.timeline, makeTimeline("Document sent for reprocessing", "Current User")],
     } : d));
     setTimeout(() => {
-      setDocuments(prev => prev.map(d => d.id === id && d.status === "reprocessing" ? { ...d, status: "validating" as const, lastUpdate: "Just now" } : d));
+      setDocuments(prev => prev.map(d => d.id === id && d.status === "reprocessing" ? { ...d, status: "processing" as const, lastUpdate: "Just now" } : d));
     }, 2000);
     addAuditLog({ timestamp: new Date().toLocaleString(), action: "Document reprocessed", actor: "Current User", actorType: "human", module: "Documents", entity: "document", entityId: id, document: `Doc #${id}`, result: "Reprocessing" });
   }, [addAuditLog]);
@@ -193,15 +193,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       clientId: doc.clientId || 0,
       docType: doc.docType || "Unknown",
       docTypeId: doc.docTypeId || 0,
-      status: "received",
-      validation: "pending",
+      status: doc.status || "received",
+      validation: doc.validation || "pending",
       expiration: doc.expiration || "2025-12-31",
       submission: "Pending",
       priority: doc.priority || "medium",
       lastUpdate: "Just now",
       origin: "Upload",
       version: 1,
-      validationScore: 0,
+      validationScore: doc.validationScore ?? 0,
       comments: [],
       timeline: [makeTimeline("Document uploaded", "Current User")],
       assignedTo: undefined,
@@ -267,11 +267,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     totalDocs: documents.length,
     approvedDocs: documents.filter(d => d.status === "approved" || d.status === "ready" || d.status === "submitted").length,
     rejectedDocs: documents.filter(d => d.status === "rejected" || d.status === "validation_failed").length,
-    pendingDocs: documents.filter(d => d.status === "waiting" || d.status === "received" || d.status === "validating").length,
+    pendingDocs: documents.filter(d => d.status === "waiting" || d.status === "received" || d.status === "uploaded" || d.status === "validating" || d.status === "processing").length,
     openExceptions: exceptions.filter(e => e.status === "open" || e.status === "in_progress").length,
     criticalExceptions: exceptions.filter(e => e.risk === "critical" && (e.status === "open" || e.status === "in_progress")).length,
     openPending: pendingItems.filter(p => p.status === "open" || p.status === "in_progress").length,
-    blockedWorkers: workers.filter(w => w.status === "blocked").length,
+    blockedWorkers: workers.filter(w => w.workerStatus === "blocked").length,
   };
 
   return (

@@ -3,6 +3,7 @@ import { useApp } from "@/stores/AppStore";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { StatusBadge } from "@/components/StatusBadge";
 import { ArrowLeft, User } from "lucide-react";
+import type { StatusType } from "@/components/StatusBadge";
 
 export default function WorkerDetail() {
   const { id } = useParams();
@@ -25,7 +26,7 @@ export default function WorkerDetail() {
           <p className="text-xs text-muted-foreground">{worker.role} · {worker.cpf} · <span className="cursor-pointer hover:text-primary" onClick={() => navigate(`/clients/${worker.clientId}`)}>{worker.clientName}</span></p>
         </div>
         <div className="ml-auto flex items-center gap-3">
-          <span className={`text-xs font-medium px-3 py-1 rounded-full ${worker.status === "active" ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"}`}>{worker.status}</span>
+          <span className={`text-xs font-medium px-3 py-1 rounded-full ${worker.workerStatus === "active" ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"}`}>{worker.workerStatus}</span>
           <span className={`text-xl font-bold ${worker.compliance >= 90 ? "text-success" : worker.compliance >= 70 ? "text-warning" : "text-destructive"}`}>{worker.compliance}%</span>
         </div>
       </div>
@@ -44,7 +45,7 @@ export default function WorkerDetail() {
               {workerDocs.map(d => (
                 <tr key={d.id} className="border-b last:border-0 table-row-interactive" onClick={() => navigate("/documents")}>
                   <td className="p-3 font-medium text-foreground">{d.docType}</td>
-                  <td className="p-3"><StatusBadge status={d.status as any} /></td>
+                  <td className="p-3"><StatusBadge status={d.status as StatusType} /></td>
                   <td className="p-3"><StatusBadge status={d.priority} /></td>
                   <td className="p-3 text-muted-foreground">{d.expiration}</td>
                   <td className="p-3 text-muted-foreground">{d.lastUpdate}</td>

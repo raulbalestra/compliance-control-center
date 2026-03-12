@@ -13,7 +13,7 @@ export default function WorkersPage() {
   const t = locale === "pt-BR";
 
   const filtered = workers.filter(w => {
-    if (statusFilter !== "All" && w.status !== statusFilter) return false;
+    if (statusFilter !== "All" && w.workerStatus !== statusFilter) return false;
     if (search && !w.name.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   });
@@ -52,7 +52,7 @@ export default function WorkersPage() {
                 <td className="p-3 text-muted-foreground">{w.role}</td>
                 <td className="p-3 text-muted-foreground">{w.clientName}</td>
                 <td className="p-3 text-muted-foreground">{w.contractName}</td>
-                <td className="p-3"><span className={`text-xs px-2 py-0.5 rounded-full ${w.status === "active" ? "bg-success/10 text-success" : w.status === "blocked" ? "bg-destructive/10 text-destructive" : "bg-muted text-muted-foreground"}`}>{w.status}</span></td>
+                <td className="p-3"><span className={`text-xs px-2 py-0.5 rounded-full ${w.workerStatus === "active" ? "bg-success/10 text-success" : w.workerStatus === "blocked" ? "bg-destructive/10 text-destructive" : "bg-muted text-muted-foreground"}`}>{w.workerStatus}</span></td>
                 <td className="p-3">{w.documents}</td>
                 <td className="p-3"><span className={w.pendingDocs > 0 ? "text-warning font-medium" : ""}>{w.pendingDocs}</span></td>
                 <td className="p-3"><span className={`font-bold ${w.compliance >= 90 ? "text-success" : w.compliance >= 70 ? "text-warning" : "text-destructive"}`}>{w.compliance}%</span></td>

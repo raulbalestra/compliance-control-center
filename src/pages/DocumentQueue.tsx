@@ -8,14 +8,16 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import type { Document } from "@/types";
 
-const statusOptions = ["All", "waiting", "received", "validating", "validation_failed", "approved", "ready", "submitted", "rejected", "correction_requested", "reprocessing", "exception"];
-const clientOptions = ["All", "Petrobras", "Shell Brasil", "TotalEnergies", "Equinor"];
+const statusOptions = ["All", "waiting", "received", "uploaded", "processing", "processed", "validating", "validation_failed", "approved", "ready", "submitted", "rejected", "correction_requested", "needs_correction", "reprocessing", "exception"];
 const priorityOptions = ["All", "critical", "high", "medium", "low"];
 
 export default function DocumentQueue() {
   const { t, locale } = useLanguage();
   const navigate = useNavigate();
   const { documents, approveDocument, rejectDocument, requestCorrection, reprocessDocument, markException, addDocumentComment, assignDocument } = useApp();
+
+  // Build dynamic client list from actual documents
+  const clientOptions = ["All", ...Array.from(new Set(documents.map(d => d.client))).sort()];
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [statusFilter, setStatusFilter] = useState("All");
   const [clientFilter, setClientFilter] = useState("All");
@@ -115,7 +117,7 @@ export default function DocumentQueue() {
                     <td className="p-3 text-muted-foreground whitespace-nowrap">{doc.contract}</td>
                     <td className="p-3 text-muted-foreground whitespace-nowrap">{doc.client}</td>
                     <td className="p-3 text-foreground whitespace-nowrap">{doc.docType}</td>
-                    <td className="p-3"><StatusBadge status={doc.status as any} /></td>
+                    <td className="p-3"><StatusBadge status={doc.status} /></td>
                     <td className="p-3"><StatusBadge status={doc.priority} /></td>
                     <td className="p-3"><span className={`text-xs font-mono ${doc.validationScore >= 80 ? "text-success" : doc.validationScore >= 50 ? "text-warning" : "text-destructive"}`}>{doc.validationScore}%</span></td>
                     <td className="p-3 text-muted-foreground">v{doc.version}</td>
@@ -147,7 +149,7 @@ export default function DocumentQueue() {
               <div className="text-center"><FileText className="w-8 h-8 text-muted-foreground mx-auto mb-2" /><p className="text-xs text-muted-foreground">{t.docDetail.pdfViewer}</p></div>
             </div>
             <div className="flex items-center gap-2 flex-wrap">
-              <StatusBadge status={selectedDoc.status as any} />
+              <StatusBadge status={selectedDoc.status} />
               <StatusBadge status={selectedDoc.priority} />
               <span className="text-xs text-muted-foreground">v{selectedDoc.version}</span>
               <span className={`text-xs font-mono px-2 py-0.5 rounded ${selectedDoc.validationScore >= 80 ? "bg-success/10 text-success" : selectedDoc.validationScore >= 50 ? "bg-warning/10 text-warning" : "bg-destructive/10 text-destructive"}`}>Score: {selectedDoc.validationScore}%</span>

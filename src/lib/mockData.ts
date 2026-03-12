@@ -55,16 +55,16 @@ export const initialSites: Site[] = [
 ];
 
 export const initialWorkers: Worker[] = [
-  { id: 1, name: "Carlos Silva", cpf: "***.***.***-12", role: "Mechanical Technician", clientId: 1, clientName: "Petrobras", contractId: 1, contractName: "Refinery Maintenance 2024", status: "active", documents: 5, pendingDocs: 1, compliance: 90 },
-  { id: 2, name: "Maria Santos", cpf: "***.***.***-34", role: "Safety Inspector", clientId: 2, clientName: "Shell Brasil", contractId: 2, contractName: "Pipeline Construction", status: "active", documents: 4, pendingDocs: 0, compliance: 100 },
-  { id: 3, name: "João Oliveira", cpf: "***.***.***-56", role: "Electrician NR-10", clientId: 1, clientName: "Petrobras", contractId: 3, contractName: "Platform Inspection", status: "blocked", documents: 3, pendingDocs: 2, compliance: 65 },
-  { id: 4, name: "Ana Costa", cpf: "***.***.***-78", role: "Administrative Assistant", clientId: 1, clientName: "Petrobras", contractId: 1, contractName: "Refinery Maintenance 2024", status: "active", documents: 6, pendingDocs: 0, compliance: 100 },
-  { id: 5, name: "Pedro Mendes", cpf: "***.***.***-90", role: "Welder", clientId: 3, clientName: "TotalEnergies", contractId: 4, contractName: "Gas Plant Upgrade", status: "active", documents: 4, pendingDocs: 1, compliance: 85 },
-  { id: 6, name: "Lucia Ferreira", cpf: "***.***.***-11", role: "HR Coordinator", clientId: 2, clientName: "Shell Brasil", contractId: 2, contractName: "Pipeline Construction", status: "active", documents: 3, pendingDocs: 1, compliance: 78 },
-  { id: 7, name: "Rafael Almeida", cpf: "***.***.***-22", role: "Confined Space Tech", clientId: 4, clientName: "Equinor", contractId: 5, contractName: "Offshore Maintenance", status: "active", documents: 4, pendingDocs: 1, compliance: 88 },
-  { id: 8, name: "Fernanda Lima", cpf: "***.***.***-33", role: "Nurse", clientId: 1, clientName: "Petrobras", contractId: 1, contractName: "Refinery Maintenance 2024", status: "active", documents: 5, pendingDocs: 0, compliance: 100 },
-  { id: 9, name: "Roberto Dias", cpf: "***.***.***-44", role: "Mechanical Engineer", clientId: 1, clientName: "Petrobras", contractId: 1, contractName: "Refinery Maintenance 2024", status: "blocked", documents: 2, pendingDocs: 2, compliance: 55 },
-  { id: 10, name: "Amanda Rocha", cpf: "***.***.***-55", role: "Scaffolding Tech", clientId: 4, clientName: "Equinor", contractId: 5, contractName: "Offshore Maintenance", status: "active", documents: 3, pendingDocs: 1, compliance: 80 },
+  { id: 1, name: "Carlos Silva", cpf: "***.***.***-12", role: "Mechanical Technician", clientId: 1, clientName: "Petrobras", contractId: 1, contractName: "Refinery Maintenance 2024", workerStatus: "active", documents: 5, pendingDocs: 1, compliance: 90 },
+  { id: 2, name: "Maria Santos", cpf: "***.***.***-34", role: "Safety Inspector", clientId: 2, clientName: "Shell Brasil", contractId: 2, contractName: "Pipeline Construction", workerStatus: "active", documents: 4, pendingDocs: 0, compliance: 100 },
+  { id: 3, name: "João Oliveira", cpf: "***.***.***-56", role: "Electrician NR-10", clientId: 1, clientName: "Petrobras", contractId: 3, contractName: "Platform Inspection", workerStatus: "blocked", documents: 3, pendingDocs: 2, compliance: 65 },
+  { id: 4, name: "Ana Costa", cpf: "***.***.***-78", role: "Administrative Assistant", clientId: 1, clientName: "Petrobras", contractId: 1, contractName: "Refinery Maintenance 2024", workerStatus: "active", documents: 6, pendingDocs: 0, compliance: 100 },
+  { id: 5, name: "Pedro Mendes", cpf: "***.***.***-90", role: "Welder", clientId: 3, clientName: "TotalEnergies", contractId: 4, contractName: "Gas Plant Upgrade", workerStatus: "active", documents: 4, pendingDocs: 1, compliance: 85 },
+  { id: 6, name: "Lucia Ferreira", cpf: "***.***.***-11", role: "HR Coordinator", clientId: 2, clientName: "Shell Brasil", contractId: 2, contractName: "Pipeline Construction", workerStatus: "active", documents: 3, pendingDocs: 1, compliance: 78 },
+  { id: 7, name: "Rafael Almeida", cpf: "***.***.***-22", role: "Confined Space Tech", clientId: 4, clientName: "Equinor", contractId: 5, contractName: "Offshore Maintenance", workerStatus: "active", documents: 4, pendingDocs: 1, compliance: 88 },
+  { id: 8, name: "Fernanda Lima", cpf: "***.***.***-33", role: "Nurse", clientId: 1, clientName: "Petrobras", contractId: 1, contractName: "Refinery Maintenance 2024", workerStatus: "active", documents: 5, pendingDocs: 0, compliance: 100 },
+  { id: 9, name: "Roberto Dias", cpf: "***.***.***-44", role: "Mechanical Engineer", clientId: 1, clientName: "Petrobras", contractId: 1, contractName: "Refinery Maintenance 2024", workerStatus: "blocked", documents: 2, pendingDocs: 2, compliance: 55 },
+  { id: 10, name: "Amanda Rocha", cpf: "***.***.***-55", role: "Scaffolding Tech", clientId: 4, clientName: "Equinor", contractId: 5, contractName: "Offshore Maintenance", workerStatus: "active", documents: 3, pendingDocs: 1, compliance: 80 },
 ];
 
 export const initialProviders: Provider[] = [

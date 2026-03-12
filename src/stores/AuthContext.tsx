@@ -4,7 +4,7 @@ import { AppUser, UserRole, DEMO_USERS } from "@/types";
 interface AuthContextType {
   user: AppUser | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => { success: boolean; error?: string };
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   hasPermission: (module: string, action?: "read" | "write" | "delete") => boolean;
 }
@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     else localStorage.removeItem("ica_user");
   }, [user]);
 
-  const login = useCallback((email: string, password: string) => {
+  const login = useCallback(async (email: string, password: string) => {
     const demo = DEMO_USERS.find(u => u.email === email && u.password === password);
     if (!demo) return { success: false, error: "Invalid credentials" };
     const appUser: AppUser = {

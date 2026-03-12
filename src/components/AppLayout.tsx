@@ -4,6 +4,7 @@ import { AppSidebar } from "./AppSidebar";
 import { Menu, Globe, LogOut } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useAuth } from "@/stores/AuthContext";
+import { NotificationBell } from "./NotificationBell";
 
 export function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -23,6 +24,7 @@ export function AppLayout() {
             <span className="ml-3 text-sm font-semibold text-foreground">ICA</span>
           </div>
           <div className="flex items-center gap-2">
+            <NotificationBell />
             <button onClick={toggleLocale} className="p-1.5 hover:bg-muted rounded-md flex items-center gap-1.5 text-xs text-muted-foreground">
               <Globe className="w-4 h-4" />
               {locale === "en" ? "PT" : "EN"}

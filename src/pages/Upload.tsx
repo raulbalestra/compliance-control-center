@@ -1,79 +1,121 @@
 import { useState, useRef } from "react";
+import { flushSync } from "react-dom";
 import { Upload as UploadIcon, X, CheckCircle2, AlertCircle, FileText } from "lucide-react";
 import { useApp } from "@/stores/AppStore";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { n8nApi } from "@/services/n8n";
 
 export default function UploadPage() {
   const { locale } = useLanguage();
   const navigate = useNavigate();
-  const { uploadDocument, clients, contracts, workers, docTypes } = useApp();
+  const { clients, contracts, workers, docTypes, uploadDocument } = useApp();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [files, setFiles] = useState<{ name: string; size: number; progress: number; status: "uploading" | "done" | "error" }[]>([]);
+  const [files, setFiles] = useState<{ file: File; name: string; size: number; progress: number; status: "pending" | "uploading" | "done" | "error" }[]>([]);
   const [selectedClient, setSelectedClient] = useState("");
   const [selectedContract, setSelectedContract] = useState("");
   const [selectedWorker, setSelectedWorker] = useState("");
   const [selectedDocType, setSelectedDocType] = useState("");
   const [observation, setObservation] = useState("");
   const [isDragging, setIsDragging] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const filteredContracts = selectedClient ? contracts.filter(c => c.clientId === Number(selectedClient)) : contracts;
-  const filteredWorkers = selectedContract ? workers.filter(w => w.contractId === Number(selectedContract)) : selectedClient ? workers.filter(w => w.clientId === Number(selectedClient)) : workers;
+  const filteredContracts = selectedClient ? contracts.filter(c => String(c.clientId) === selectedClient) : contracts;
+  const filteredWorkers = selectedContract ? workers.filter(w => String(w.contractId) === selectedContract) : selectedClient ? workers.filter(w => String(w.clientId) === selectedClient) : workers;
 
-  const simulateUpload = (fileNames: string[]) => {
-    const newFiles = fileNames.map(name => ({ name, size: Math.floor(Math.random() * 5000000) + 100000, progress: 0, status: "uploading" as const }));
-    setFiles(prev => [...prev, ...newFiles]);
-
-    newFiles.forEach((file, idx) => {
-      const interval = setInterval(() => {
-        setFiles(prev => prev.map(f => f.name === file.name && f.status === "uploading" ? { ...f, progress: Math.min(f.progress + Math.random() * 30, 100) } : f));
-      }, 300);
-      setTimeout(() => {
-        clearInterval(interval);
-        setFiles(prev => prev.map(f => f.name === file.name ? { ...f, progress: 100, status: "done" } : f));
-      }, 1500 + idx * 500);
-    });
+  const addFiles = (rawFiles: File[]) => {
+    const newEntries = rawFiles.map(f => ({ file: f, name: f.name, size: f.size, progress: 0, status: "pending" as const }));
+    setFiles(prev => [...prev, ...newEntries]);
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    const fileNames = Array.from(e.dataTransfer.files).map(f => f.name);
-    if (fileNames.length) simulateUpload(fileNames);
+    const picked = Array.from(e.dataTransfer.files);
+    if (picked.length) addFiles(picked);
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const fileNames = Array.from(e.target.files || []).map(f => f.name);
-    if (fileNames.length) simulateUpload(fileNames);
+    const picked = Array.from(e.target.files || []);
+    if (picked.length) addFiles(picked);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const t = locale === "pt-BR";
     if (!selectedClient || !selectedDocType) {
-      toast.error(locale === "pt-BR" ? "Preencha os campos obrigatórios" : "Fill required fields");
+      toast.error(t ? "Preencha os campos obrigatórios" : "Fill required fields");
       return;
     }
-    const client = clients.find(c => c.id === Number(selectedClient));
-    const contract = contracts.find(c => c.id === Number(selectedContract));
-    const worker = workers.find(w => w.id === Number(selectedWorker));
-    const docType = docTypes.find(d => d.id === Number(selectedDocType));
+    const pendingFiles = files.filter(f => f.status === "pending");
+    if (pendingFiles.length === 0) {
+      toast.error(t ? "Nenhum documento selecionado" : "No documents selected");
+      return;
+    }
+    setIsSubmitting(true);
+    let successCount = 0;
 
-    files.filter(f => f.status === "done").forEach(() => {
-      uploadDocument({
-        client: client?.name || "",
-        clientId: client?.id || 0,
-        contract: contract?.name || "",
-        contractId: contract?.id || 0,
-        worker: worker?.name || "Pending Assignment",
-        workerId: worker?.id || 0,
-        docType: docType?.name || "",
-        docTypeId: docType?.id || 0,
-        priority: (docType?.criticality as any) || "medium",
-      });
-    });
+    // Resolve names for n8n metadata
+    const workerName = workers.find(w => String(w.id) === selectedWorker)?.name;
+    const clientName = clients.find(c => String(c.id) === selectedClient)?.name;
+    const contractName = contracts.find(c => String(c.id) === selectedContract)?.name;
+    const docTypeName = docTypes.find(d => String(d.id) === selectedDocType)?.name;
 
-    toast.success(locale === "pt-BR" ? `${files.filter(f => f.status === "done").length} documento(s) enviado(s)` : `${files.filter(f => f.status === "done").length} document(s) uploaded`);
-    setTimeout(() => navigate("/documents"), 1000);
+    for (const entry of pendingFiles) {
+      setFiles(prev => prev.map(f => f.name === entry.name ? { ...f, status: "uploading", progress: 10 } : f));
+      try {
+        // Send file to n8n for AI analysis
+        setFiles(prev => prev.map(f => f.name === entry.name ? { ...f, progress: 40 } : f));
+        const analysis = await n8nApi.analyzeDocument(entry.file, {
+          workerName,
+          clientName,
+          contractName,
+          docTypeName,
+          observation,
+        });
+
+        setFiles(prev => prev.map(f => f.name === entry.name ? { ...f, progress: 100, status: "done" } : f));
+        successCount++;
+
+        // Determine status based on score
+        const score = analysis.compliance_score;
+        const docStatus = score >= 85 ? "approved" as const
+          : score >= 50 ? "validating" as const
+          : "validation_failed" as const;
+        const docValidation = score >= 85 ? "pass" as const
+          : score >= 50 ? "warning" as const
+          : "fail" as const;
+        const docPriority = score >= 85 ? "low" as const
+          : score >= 50 ? "medium" as const
+          : "critical" as const;
+
+        // Add document to the queue with n8n analysis data
+        flushSync(() => {
+          uploadDocument({
+            worker: workerName || "Unknown",
+            workerId: selectedWorker ? Number(selectedWorker) : 0,
+            contract: contractName || "Unknown",
+            contractId: selectedContract ? Number(selectedContract) : 0,
+            client: clientName || "Unknown",
+            clientId: selectedClient ? Number(selectedClient) : 0,
+            docType: analysis.document_type || docTypeName || "Unknown",
+            docTypeId: selectedDocType ? Number(selectedDocType) : 0,
+            status: docStatus,
+            validation: docValidation,
+            validationScore: score,
+            priority: docPriority,
+          });
+        });
+      } catch (err) {
+        console.error("[Upload] Failed to upload file:", entry.name, err);
+        setFiles(prev => prev.map(f => f.name === entry.name ? { ...f, status: "error" } : f));
+      }
+    }
+    setIsSubmitting(false);
+    if (successCount > 0) {
+      toast.success(t ? `${successCount} documento(s) enviado(s) para análise` : `${successCount} document(s) submitted for analysis`);
+      navigate("/documents");
+    }
   };
 
   const t = locale === "pt-BR";
@@ -112,7 +154,7 @@ export default function UploadPage() {
                     </div>
                     <p className="text-[10px] text-muted-foreground mt-0.5">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
                   </div>
-                  <button onClick={() => setFiles(prev => prev.filter((_, idx) => idx !== i))} className="p-1 hover:bg-muted rounded"><X className="w-3 h-3" /></button>
+                  <button onClick={() => setFiles(prev => prev.filter((_, idx) => idx !== i))} disabled={file.status === "uploading"} className="p-1 hover:bg-muted rounded disabled:opacity-30"><X className="w-3 h-3" /></button>
                 </div>
               ))}
             </div>
@@ -153,8 +195,8 @@ export default function UploadPage() {
             <label className="text-xs font-medium text-foreground">{t ? "Observação" : "Observation"}</label>
             <textarea className="w-full mt-1 px-3 py-2 text-xs border border-input rounded-md bg-background" rows={3} value={observation} onChange={e => setObservation(e.target.value)} placeholder={t ? "Observações opcionais..." : "Optional notes..."} />
           </div>
-          <button onClick={handleSubmit} disabled={files.filter(f => f.status === "done").length === 0} className="w-full py-2.5 text-xs font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50">
-            {t ? "Enviar Documentos" : "Submit Documents"} ({files.filter(f => f.status === "done").length})
+          <button onClick={handleSubmit} disabled={isSubmitting || files.filter(f => f.status === "pending").length === 0} className="w-full py-2.5 text-xs font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50">
+            {isSubmitting ? (t ? "Enviando..." : "Uploading...") : `${t ? "Enviar Documentos" : "Submit Documents"} (${files.filter(f => f.status === "pending").length})`}
           </button>
         </div>
       </div>

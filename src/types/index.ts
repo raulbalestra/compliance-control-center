@@ -11,7 +11,7 @@ export interface AppUser {
   createdAt: string;
 }
 
-export type DocStatus = "waiting" | "received" | "validating" | "validation_failed" | "approved" | "ready" | "submitted" | "rejected" | "correction_requested" | "reprocessing" | "exception";
+export type DocStatus = "waiting" | "received" | "uploaded" | "processing" | "processed" | "validating" | "validation_failed" | "approved" | "ready" | "submitted" | "rejected" | "correction_requested" | "needs_correction" | "reprocessing" | "exception";
 export type Priority = "critical" | "high" | "medium" | "low";
 export type ValidationResult = "pass" | "fail" | "warning" | "pending";
 
@@ -103,7 +103,7 @@ export interface Worker {
   clientName: string;
   contractId: number;
   contractName: string;
-  status: "active" | "blocked" | "inactive";
+  workerStatus: "active" | "blocked" | "inactive";
   documents: number;
   pendingDocs: number;
   compliance: number;

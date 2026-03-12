@@ -15,20 +15,23 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    setTimeout(() => {
-      const result = login(email, password);
+    try {
+      const result = await login(email, password);
       if (result.success) {
         const demo = DEMO_USERS.find(u => u.email === email);
         navigate(demo?.role === "provider" ? "/portal" : "/");
       } else {
         setError(locale === "pt-BR" ? "Credenciais inválidas" : "Invalid credentials");
       }
+    } catch {
+      setError(locale === "pt-BR" ? "Credenciais inválidas" : "Invalid credentials");
+    } finally {
       setLoading(false);
-    }, 600);
+    }
   };
 
   const roleLabels: Record<string, { en: string; pt: string }> = {

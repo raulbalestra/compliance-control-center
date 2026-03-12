@@ -1,0 +1,58 @@
+ID,Responsável,Semana,Prioridade,Status,Task,Detalhes,Prazo
+I-01,Igor,1,Alta,Não iniciada,Provisionar infraestrutura base,"VPS · Docker · Firewall · Domínio · SSL · docker-compose (Strapi, FastAPI, PostgreSQL, Redis, n8n)",10/03/2026
+I-02,Igor,1,Alta,Não iniciada,Inicializar backend CMS,Iniciar Strapi · conectar PostgreSQL · configurar admin / CORS / JWT,10/03/2026
+I-03,Igor,1,Alta,Não iniciada,Modelagem de entidades administrativas,"Content Types: Client, Contract, Worker, Provider, Subcontractor · Relações: Client→Contracts / Contract→Workers",11/03/2026
+I-04,Igor,1,Alta,Não iniciada,Modelagem documental,"Content Types: Document, DocumentType, ComplianceRule, Exception, Validation, AuditLog",11/03/2026
+I-05,Igor,1,Alta,Não iniciada,Sistema de autenticação,"Login · Signup · Refresh token · Roles: Admin, Operator, PortalUser",12/03/2026
+I-06,Igor,1,Média,Não iniciada,Configurar locales,"i18n: pt-BR, en-US, es-ES",12/03/2026
+I-07,Igor,1,Média,Não iniciada,Configurar permissões RBAC,"Admin, Operator, PortalUser",13/03/2026
+I-08,Igor,1,Média,Não iniciada,Upload de documentos,"Media Library · limites de upload · tipos aceitos: PDF, JPG, PNG",13/03/2026
+I-09,Igor,2,Alta,Não iniciada,Automação de validação,n8n workflow · Trigger: FastAPI webhook · Fluxo: document_received → validation_started,16/03/2026
+I-10,Igor,2,Alta,Não iniciada,Automação de vencimentos,n8n daily_job · verificar documentos vencidos · enviar notificações,17/03/2026
+I-11,Igor,2,Média,Não iniciada,Automação de relatórios,n8n weekly_report · enviar relatório por e-mail,18/03/2026
+I-12,Igor,2,Média,Não iniciada,Deploy produção (Strapi),Configurar env · domínio · reverse proxy,19/03/2026
+I-13,Igor,2,Média,Não iniciada,Deploy n8n,Configurar webhooks · testar automações em produção,19/03/2026
+I-14,Igor,2,Baixa,Não iniciada,Documentação API,Postman collection · endpoints · exemplos de request/response,20/03/2026
+I-15,Igor,2,Baixa,Não iniciada,Observabilidade,Logs · health checks · monitoramento básico,20/03/2026
+A-01,Atos,1,Alta,Não iniciada,Estrutura base da API,"Criar: app/, routers/, services/, schemas/, models/, core/, workers/",10/03/2026
+A-02,Atos,1,Alta,Não iniciada,Conexão com banco,SQLAlchemy · asyncpg · Alembic migrations,10/03/2026
+A-03,Atos,1,Alta,Não iniciada,Middleware de autenticação,Validar JWT emitido pelo Strapi,11/03/2026
+A-04,Atos,1,Alta,Não iniciada,CRUD Workers,GET /workers · POST /workers · PATCH /workers/{id},11/03/2026
+A-05,Atos,1,Alta,Não iniciada,CRUD Compliance Rules,create_rule · update_rule · evaluate_rule,12/03/2026
+A-06,Atos,1,Média,Não iniciada,Sistema de exceções,create_exception · approve_exception · reject_exception,12/03/2026
+A-07,Atos,1,Média,Não iniciada,Validações,submit_validation · get_validation_status,13/03/2026
+A-08,Atos,1,Média,Não iniciada,Fila documental,Status: document_received → processing → validated / rejected,13/03/2026
+A-09,Atos,2,Alta,Não iniciada,Engine de compliance,Avaliar regras · gerar inconsistências · vincular a Workers/Contractors,16/03/2026
+A-10,Atos,2,Alta,Não iniciada,Relatórios,report_by_client · report_by_contract · report_by_period,17/03/2026
+A-11,Atos,2,Média,Não iniciada,Integração com n8n,"Disparar eventos: document_received, document_validated via webhook",17/03/2026
+A-12,Atos,2,Média,Não iniciada,Audit Logs,Registrar: user · action · timestamp,18/03/2026
+A-13,Atos,2,Média,Não iniciada,Processes e Sites,Endpoints: /processes e /sites,18/03/2026
+A-14,Atos,2,Média,Não iniciada,Filtros e paginação,limit · offset · search nos endpoints principais,19/03/2026
+A-15,Atos,2,Baixa,Não iniciada,Testes unitários,pytest nos serviços e na engine de compliance,19/03/2026
+A-16,Atos,2,Baixa,Não iniciada,Dockerização,Dockerfile · integração no docker-compose (coordenar com Igor),20/03/2026
+A-17,Atos,2,Baixa,Não iniciada,Documentação,OpenAPI (Swagger) · Postman Collection,20/03/2026
+L-01,Léo,1,Alta,Não iniciada,Ajustar mocks,mockData.ts alinhado à estrutura real dos Content Types do Strapi,10/03/2026
+L-02,Léo,1,Alta,Não iniciada,Cliente HTTP,axios · interceptors · injeção de JWT · refresh token · tratamento de erros,10/03/2026
+L-03,Léo,1,Alta,Não iniciada,Login,Integrar Login.tsx com API Strapi (JWT + armazenamento seguro),11/03/2026
+L-04,Léo,1,Alta,Não iniciada,Rotas protegidas,ProtectedRoute.tsx validando roles do JWT,11/03/2026
+L-05,Léo,1,Média,Não iniciada,Clients,CRUD conectado: Clients.tsx + ClientDetail.tsx,12/03/2026
+L-06,Léo,1,Média,Não iniciada,Contracts,CRUD conectado: Contracts.tsx + ContractDetail.tsx,12/03/2026
+L-07,Léo,1,Média,Não iniciada,Workers,CRUD conectado: Workers.tsx + WorkerDetail.tsx,13/03/2026
+L-08,Léo,1,Média,Não iniciada,Providers & Subcontractors,CRUD conectado: Providers.tsx + Subcontractors.tsx,13/03/2026
+L-09,Léo,2,Alta,Não iniciada,Upload documentos,DocumentQueue.tsx + Upload.tsx → Strapi Media Library,16/03/2026
+L-10,Léo,2,Alta,Não iniciada,Compliance UI,ComplianceRules.tsx · Exceptions.tsx · Validations.tsx conectados ao backend,17/03/2026
+L-11,Léo,2,Média,Não iniciada,Dashboards,Dashboard.tsx + OperationalDashboard.tsx com dados reais,17/03/2026
+L-12,Léo,2,Média,Não iniciada,Reports UI,Reports.tsx · geração e download de relatórios,18/03/2026
+L-13,Léo,2,Média,Não iniciada,Portal externo,PortalDashboard.tsx + PortalUpload.tsx com autenticação PortalUser,18/03/2026
+L-14,Léo,2,Média,Não iniciada,UX ajustes,Loading skeletons · mensagens de erro · feedback ao usuário · responsividade,19/03/2026
+L-15,Léo,2,Média,Não iniciada,i18n,Conectar translations.ts ao Strapi para traduções dinâmicas (pt-BR / en-US / es-ES),19/03/2026
+L-16,Léo,2,Baixa,Não iniciada,Testes,vitest nos fluxos e páginas principais,20/03/2026
+L-17,Léo,2,Baixa,Não iniciada,QA visual,Cross-browser · acessibilidade (a11y) · polimento de UI,20/03/2026
+R-01,Raul,1,Alta,Não iniciada,Arquitetura do sistema,Strapi ↔ FastAPI ↔ Front-end ↔ n8n,10/03/2026
+R-02,Raul,1,Alta,Não iniciada,Contratos de API,Schemas/types compartilhados entre Strapi e FastAPI,11/03/2026
+R-03,Raul,1,Média,Não iniciada,Revisão backend,"Scaffold Strapi (I-01→I-04) e FastAPI (A-01→A-04)",12/03/2026
+R-04,Raul,1,Média,Não iniciada,Revisão roles,Alinhar mapeamento de roles entre Strapi e front-end,13/03/2026
+R-05,Raul,2,Alta,Não iniciada,Code review crítico,"JWT, compliance engine, upload",17/03/2026
+R-06,Raul,2,Média,Não iniciada,Validação deploy,Todos os serviços funcionando em produção,19/03/2026
+R-07,Raul,2,Média,Não iniciada,Teste E2E,login → upload → validação → relatório,20/03/2026
+R-08,Raul,2,Baixa,Não iniciada,Preparação demo,Roteiro de demonstração do MVP (22/03),20/03/2026
