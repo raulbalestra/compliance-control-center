@@ -39,6 +39,8 @@ export interface Document {
   assignedTo?: string;
   rejectionReason?: string;
   exceptionReason?: string;
+  agentRecommendation?: string;
+  agentRecommendationPt?: string;
 }
 
 export interface Comment {

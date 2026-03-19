@@ -205,6 +205,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       comments: [],
       timeline: [makeTimeline("Document uploaded", "Current User")],
       assignedTo: undefined,
+      agentRecommendation: doc.agentRecommendation,
+      agentRecommendationPt: doc.agentRecommendationPt,
     };
     setDocuments(prev => [newDoc, ...prev]);
     addAuditLog({ timestamp: new Date().toLocaleString(), action: "Document uploaded", actor: "Current User", actorType: "human", module: "Documents", entity: "document", entityId: newDoc.id, document: `${newDoc.docType} - ${newDoc.worker}`, result: "Queued" });
