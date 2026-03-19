@@ -94,7 +94,7 @@ export default function DocumentQueue() {
           </div>
           <div className="mt-2 text-xs text-muted-foreground">{filtered.length} {locale === "pt-BR" ? "documentos" : "documents"}</div>
         </div>
-        <div className="flex-1 overflow-auto px-4 md:px-6 pb-4">
+        <div className="flex-1 overflow-auto px-4 md:px-6 pb-4 bg-background">
           <div className="bg-card rounded-lg border overflow-x-auto">
             <table className="w-full text-xs min-w-[800px]">
               <thead>
@@ -144,7 +144,7 @@ export default function DocumentQueue() {
             <button onClick={() => setSelectedId(null)} className="p-1 hover:bg-muted rounded shrink-0 hidden md:block"><X className="w-4 h-4 text-muted-foreground" /></button>
           </div>
 
-          <div className="p-4 space-y-5 flex-1">
+          <div className="p-4 space-y-5 flex-1 bg-card">
             <div className="bg-muted rounded-lg border-2 border-dashed border-border h-40 flex items-center justify-center">
               <div className="text-center"><FileText className="w-8 h-8 text-muted-foreground mx-auto mb-2" /><p className="text-xs text-muted-foreground">{t.docDetail.pdfViewer}</p></div>
             </div>
@@ -188,7 +188,7 @@ export default function DocumentQueue() {
                 <Bot className="w-4 h-4 text-primary" />
                 <span className="text-xs font-semibold text-primary">{t.docDetail.agentRecommendation}</span>
               </div>
-              <p className="text-xs text-foreground">{t.docDetail.agentRecommendationText}</p>
+              <p className="text-xs text-foreground whitespace-pre-line">{(locale === "pt-BR" ? selectedDoc.agentRecommendationPt : selectedDoc.agentRecommendation) || t.docDetail.agentRecommendationText}</p>
             </div>
 
             <div className="grid grid-cols-2 gap-2">

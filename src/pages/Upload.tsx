@@ -89,6 +89,30 @@ export default function UploadPage() {
           : score >= 50 ? "medium" as const
           : "critical" as const;
 
+        // Build agent recommendation in both languages from n8n feedback
+        const { summary, checklist, recommendation } = analysis;
+        const issueItems = checklist.filter(c => c.status !== "present" && (c.feedback || c.fix_example || c.notes));
+
+        // English version
+        const recActionEn = recommendation === "approve" ? "Recommended action: Approve"
+          : recommendation === "correction" ? "Recommended action: Request correction"
+          : "Recommended action: Reject";
+        const summaryEn = `Document passes ${summary.present} of ${summary.total_fields} validation checks.`;
+        const feedbackEn = issueItems.map(c => `\u2022 ${c.field}: ${c.feedback || c.notes}`).join("\n");
+        const agentRecommendation = feedbackEn
+          ? `${summaryEn}\n\n${feedbackEn}\n\n${recActionEn}`
+          : `${summaryEn} ${recActionEn}`;
+
+        // Portuguese version
+        const recActionPt = recommendation === "approve" ? "Ação recomendada: Aprovar"
+          : recommendation === "correction" ? "Ação recomendada: Solicitar correção"
+          : "Ação recomendada: Rejeitar";
+        const summaryPt = `Documento passa em ${summary.present} de ${summary.total_fields} verificações.`;
+        const feedbackPt = issueItems.map(c => `\u2022 ${c.field}: ${c.fix_example || c.feedback || c.notes}`).join("\n");
+        const agentRecommendationPt = feedbackPt
+          ? `${summaryPt}\n\n${feedbackPt}\n\n${recActionPt}`
+          : `${summaryPt} ${recActionPt}`;
+
         // Add document to the queue with n8n analysis data
         flushSync(() => {
           uploadDocument({
@@ -104,6 +128,8 @@ export default function UploadPage() {
             validation: docValidation,
             validationScore: score,
             priority: docPriority,
+            agentRecommendation,
+            agentRecommendationPt,
           });
         });
       } catch (err) {

@@ -5,6 +5,8 @@ export interface N8nChecklistItem {
   status: 'present' | 'missing' | 'invalid';
   found_value: string;
   notes: string;
+  feedback: string;
+  fix_example: string;
 }
 
 export interface N8nSummary {
